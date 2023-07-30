@@ -134,7 +134,7 @@ function upload_postgres_backup_to_s3() {
       echo "[INFO] Attempting to set lifecycle policy for bucket $((i+1)) ..."
 
       local lifecycle_setting_error_msg=""
-      lifecycle_setting_error_msg=$(s3cmd setlifecycle lifecycle.xml s3://"$BUCKET_NAME" -host=https://"$ENDPOINT_URL" --host-bucket="https://%(bucket)s.$ENDPOINT_URL" --access_key="$ACCESS_KEY" --secret_key="$SECRET_KEY")
+      lifecycle_setting_error_msg=$(s3cmd setlifecycle lifecycle.xml s3://"$BUCKET_NAME" --host=https://"$ENDPOINT_URL" --host-bucket="https://%(bucket)s.$ENDPOINT_URL" --access_key="$ACCESS_KEY" --secret_key="$SECRET_KEY")
 
       if [ $? -eq 0 ]; then
         echo "[INFO] Successfully set lifecycle policy for bucket $((i+1))."
