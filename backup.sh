@@ -124,6 +124,7 @@ function upload_postgres_backup_to_s3() {
       local SECRET_KEY=""
       local BUCKET_NAME=""
       local ENDPOINT_URL=""
+      local BUCKET_KEEP_PREVIOUS_BACKUPS=""
 
       ACCESS_KEY="${!access_keys[i]}"
       SECRET_KEY="${!secret_keys[i]}"
@@ -145,7 +146,7 @@ function upload_postgres_backup_to_s3() {
       echo "[INFO] Uploading backup to S3 bucket $((i+1)) ..."
 
       local backup_name=""
-      if [[ "$BUCKET_KEEP_PREVIOUS_BACKUPS" == "true" ]]; then
+      if [ "$BUCKET_KEEP_PREVIOUS_BACKUPS" ]; then
         backup_name="backup_$NOW.sql"
       else
         backup_name="backup.sql"

@@ -2,6 +2,10 @@
 __pycache__/
 *.py[cod]
 *$py.class
+modules.xml
+PostgresBackup.iml
+profiles_settings.xml
+vcs.xml
 
 # C extensions
 *.so
