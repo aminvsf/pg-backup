@@ -145,7 +145,7 @@ function upload_postgres_backup_to_s3() {
       echo "[INFO] Uploading backup to S3 bucket $((i+1)) ..."
 
       local backup_name=""
-      if [ $BUCKET_KEEP_PREVIOUS_BACKUPS = "true" ]; then
+      if [[ "$BUCKET_KEEP_PREVIOUS_BACKUPS" == "true" ]]; then
         backup_name="backup_$NOW.sql"
       else
         backup_name="backup.sql"
