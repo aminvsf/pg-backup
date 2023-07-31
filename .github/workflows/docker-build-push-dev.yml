@@ -1,15 +1,15 @@
-name: Docker Build and Push
+name: Docker Build and Push (Dev)
 on:
   push:
     branches:
-      - main
+      - dev
 
 env:
   DOCKER_REGISTRY: aminvsf
   DOCKER_USERNAME: ${{ secrets.PGBACKUP_REGISTRY_USERNAME }}
   DOCKER_PASSWORD: ${{ secrets.PGBACKUP_REGISTRY_PASSWORD }}
   DOCKER_IMAGE_NAME: pg-backup
-  TAG: v${{ github.run_number }}
+  TAG: dev
 
 jobs:
   build-and-push:
