@@ -1,0 +1,35 @@
+name: Release
+on:
+  release:
+    types:
+      - published
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        PG_VERSION: [ "10", "11", "12", "13", "14", "15", "16" ]
+    env:
+      IMAGE: ${{ vars.DOCKERHUB_USERNAME }}/${{ github.event.repository.name }}
+      RELEASE_IMAGE: ${{ env.IMAGE }}-${{ matrix.PG_VERSION }}:${{ github.event.release.tag_name }}
+      BUILDCACHE_IMAGE: ${{ env.IMAGE }}-${{ matrix.PG_VERSION }}:buildcache
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ vars.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+      - name: Build and push
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: ${{ env.RELEASE_IMAGE }}
+          cache-from: type=registry,ref=${{ env.BUILDCACHE_IMAGE }}
+          cache-to: type=registry,ref=${{ env.BUILDCACHE_IMAGE }},mode=max
