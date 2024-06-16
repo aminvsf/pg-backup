@@ -3,16 +3,14 @@ on:
   release:
     types:
       - published
+env:
+  IMAGE: ${{ vars.DOCKERHUB_USERNAME }}/${{ github.event.repository.name }}
 jobs:
   build:
     runs-on: ubuntu-latest
     strategy:
       matrix:
         PG_VERSION: [ "10", "11", "12", "13", "14", "15", "16" ]
-    env:
-      IMAGE: ${{ vars.DOCKERHUB_USERNAME }}/${{ github.event.repository.name }}
-      RELEASE_IMAGE: ${{ env.IMAGE }}-${{ matrix.PG_VERSION }}:${{ github.event.release.tag_name }}
-      BUILDCACHE_IMAGE: ${{ env.IMAGE }}-${{ matrix.PG_VERSION }}:buildcache
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -30,6 +28,6 @@ jobs:
         with:
           context: .
           push: true
-          tags: ${{ env.RELEASE_IMAGE }}
-          cache-from: type=registry,ref=${{ env.BUILDCACHE_IMAGE }}
-          cache-to: type=registry,ref=${{ env.BUILDCACHE_IMAGE }},mode=max
+          tags: ${{ env.IMAGE }}-${{ matrix.PG_VERSION }}:${{ github.event.release.tag_name }}
+          cache-from: type=registry,ref=${{ env.IMAGE }}-${{ matrix.PG_VERSION }}:buildcache
+          cache-to: type=registry,ref=${{ env.IMAGE }}-${{ matrix.PG_VERSION }}:buildcache,mode=max
