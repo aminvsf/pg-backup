@@ -42,8 +42,9 @@ function create_backup {
   pg_dump -h "$pg_host" -p "$pg_port" -U "$pg_user" -d "$pg_database" > "$backup_name"
 
   echo "[INFO] Compressing backup..."
-  tar -cf "$backup_name".tar.xz "$backup_name"
-  rm "$backup_name"
+  local compressed_backup_name
+  compressed_backup_name="$backup_name".tar.xz
+  tar -cf "$compressed_backup_name" "$backup_name"
 
   echo "[INFO] Uploading backup..."
   local access_keys=()
@@ -75,7 +76,7 @@ function create_backup {
     local endpoint_url="${!endpoint_urls[i]}"
     local bucket_url="${!bucket_urls[i]}"
     local bucket_name="${!bucket_names[i]}"
-    s3cmd put "$backup_name" \
+    s3cmd put "$compressed_backup_name" \
     s3://"$bucket_name"/"$pg_database"/ \
     --host="$endpoint_url" \
     --host-bucket="$bucket_url" \
