@@ -1,20 +1,15 @@
-FROM ubuntu:22.04
+FROM debian:bookworm-slim
 
-# Timezone (You can set your desired timezone!)
-ENV TZ=Asia/Tehran
+ARG PG_VERSION=16
 
-# Run the update.
-RUN apt-get update && apt-get upgrade -y
+# Install PostgreSQL client and s3cmd.
+RUN apt-get update && \
+    apt-get install -y apt-utils && \
+    apt-get install -y s3cmd postgresql-common && \
+    bash /usr/share/postgresql-common/pgdg/apt.postgresql.org.sh -y && \
+    apt-get install postgresql-client-$PG_VERSION -y && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 
-# Install apt-utils, PostgreSQL client and s3cmd CLI.
-RUN apt-get install -y apt-utils ca-certificates
-RUN DEBIAN_FRONTEND=noninteractive TZ=Asia/Tehran apt-get install -y postgresql-client s3cmd
-
-# Copy the backup script
-COPY backup.sh /
-
-# Copy the lifecycle file.
-COPY lifecycle.xml /
-
-# Make the backup script executable.
+COPY backup.sh .
 RUN chmod +x /backup.sh
