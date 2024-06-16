@@ -28,6 +28,6 @@ jobs:
         with:
           context: .
           push: true
-          tags: ${{ env.IMAGE }}-${{ matrix.PG_VERSION }}:${{ github.event.release.tag_name }}
+          tags: ${{ env.IMAGE }}:${{ matrix.PG_VERSION }}-${{ github.event.release.tag_name }}
           cache-from: type=registry,ref=${{ env.IMAGE }}-${{ matrix.PG_VERSION }}:buildcache
           cache-to: type=registry,ref=${{ env.IMAGE }}-${{ matrix.PG_VERSION }}:buildcache,mode=max
